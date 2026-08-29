@@ -258,7 +258,7 @@
         <div class="console-body">
           <div class="l"><span class="c">$</span> <span class="k">status</span> --all</div>
           <div class="l"><span class="ok">●</span> pfsense.fw        <span class="c">firewall + ntopng</span> <span class="ok">up</span></div>
-          <div class="l"><span class="ok">●</span> wazuh.siem        <span class="c">6-host homelab</span>   <span class="ok">up</span></div>
+          <div class="l"><span class="ok">●</span> wazuh.siem        <span class="c">real-time SIEM</span>   <span class="ok">up</span></div>
           <div class="l"><span class="ok">●</span> vytautas.it       <span class="c">cloudflare edge</span>  <span class="ok">up</span></div>
           <div class="l"><span class="ok">●</span> kraken.bot        <span class="c">11 coins · live</span>  <span class="a">24/7</span></div>
           <div class="l"><span class="ok">●</span> ollama.local      <span class="c">qwen 14B/27B</span>    <span class="v">gpu</span></div>
@@ -393,9 +393,18 @@ var STATUS = {
 };
 
 var SYSTEMS = [
-  {n:"Production homelab (6 hosts)", d:"sec", s:"LIVE", tech:"Proxmox · Wazuh · Authelia",
-   lt:"6 hostų gamybinis homelab'as: Proxmox virtualizacija, Wazuh SIEM, Nextcloud, osTicket, Caddy+Authelia SSO vartai ir NIS2 įrodymų generatorius. Pilnas atkūrimas iš vieno USB.",
-   en:"6-host production homelab: Proxmox, Wazuh SIEM, Nextcloud, osTicket, Caddy+Authelia SSO gateway and a NIS2 evidence generator. Full disaster-recovery from one USB stick."},
+  {n:"Wazuh SIEM", d:"sec", s:"LIVE", tech:"Wazuh · agents · dashboards",
+   lt:"Pilnas Wazuh SIEM diegimas ir priežiūra: agentai, custom taisyklės ir dekoderiai, saugumo skydeliai bei įspėjimai — realaus laiko grėsmių matomumas.",
+   en:"A full Wazuh SIEM deployment and operations: agents, custom rules and decoders, security dashboards and alerts — real-time threat visibility."},
+  {n:"Zero-trust SSO vartai", d:"sec", s:"LIVE", tech:"Caddy · Authelia · MFA",
+   lt:"Nulinio pasitikėjimo prieigos vartai: Caddy reverse proxy + Authelia SSO su MFA — viena saugi prisijungimo vieta visoms vidinėms paslaugoms.",
+   en:"A zero-trust access gateway: a Caddy reverse proxy + Authelia SSO with MFA — one secure sign-on for every internal service."},
+  {n:"Self-hosted Nextcloud", d:"infra", s:"LIVE", tech:"Nextcloud · Docker · custom theme",
+   lt:"Privatus „debesis“ — savo talpinama Nextcloud platforma su individualia tema ir pilnu failų bei naudotojų valdymu, be trečių šalių paslaugų.",
+   en:"A private cloud — self-hosted Nextcloud with a custom theme and full file & user management, with no third-party services."},
+  {n:"osTicket Helpdesk", d:"infra", s:"LIVE", tech:"osTicket · Docker · SMTP",
+   lt:"Pagalbos tarnybos (helpdesk) sistema: pritaikytas osTicket su el. pašto integracija, darbo srautais ir SLA — vidiniam IT palaikymui.",
+   en:"A help desk system: a customized osTicket with email integration, workflows and SLAs — for internal IT support."},
   {n:"NIS2 / KSĮ atitiktis", d:"sec", s:"LIVE", tech:"SIEM · vCISO · dokumentai",
    lt:"Kibernetinio saugumo atitiktis kaip paslauga: pardavimų playbook'as, 3 pakopų kainodara ir vykdymo įrankiai — SIEM, incidentų valdymas, 10 LT dokumentų ir įrodymų generatorius.",
    en:"Cybersecurity compliance as a service: sales playbook, 3-tier pricing and a delivery toolkit — SIEM, incident response, 10 LT documents and an evidence generator."},
@@ -437,9 +446,9 @@ var SYSTEMS = [
   {n:"Spinta", d:"web", s:"TOOL", tech:"React · Express · SQLite",
    lt:"Virtualios drabužinės socialinė platforma — pilnas stack'as su vartotojais, įkėlimais ir kanalu.",
    en:"A virtual-wardrobe social platform — a full stack with users, uploads and a feed."},
-  {n:"Vision Web", d:"web", s:"TOOL", tech:"React · Vite · offline",
-   lt:"Offline uosto ERP (Equinox Vision 5) klonas: tas pats UI ir skaičiavimai, bet nesijungia prie nieko — saugus mokymuisi ir demonstracijoms.",
-   en:"An offline clone of a port ERP (Equinox Vision 5): same UI and calculations but connected to nothing — safe for training and demos."},
+  {n:"ERP offline sandbox", d:"web", s:"TOOL", tech:"React · Vite · offline",
+   lt:"Sudėtingos verslo ERP sistemos offline klonas: atkurtas UI ir skaičiavimai, bet nesijungia prie nieko — saugi „smėlio dėžė“ mokymuisi ir demonstracijoms.",
+   en:"An offline clone of a complex business ERP: reproduced UI and calculations, connected to nothing — a safe sandbox for training and demos."},
 
   {n:"Traffic Counter", d:"ai", s:"SOLD", tech:"YOLO11 · OCR · PyInstaller",
    lt:"Komercinė kompiuterinės regos programa, skaičiuojanti transporto srautą iš kamerų (YOLO11), su laikrodžio OCR ir modelio auto-derinimu. Parduota pirmam klientui už 3000 €.",
@@ -538,10 +547,10 @@ var STACK = [
 
 var FLAGS = [
   {idx:"01", d:"sec",
-   lt:{h:"Verslo klasės homelab'as, kurį valdo vienas žmogus", p:"Šešių hostų aplinka su Wazuh SIEM, Nextcloud, osTicket pagalbos tarnyba ir Authelia SSO vartais — visa už Cloudflare nulinio pasitikėjimo prieigos. NIS2 įrodymai generuojami automatiškai, o visą stack'ą galima atkurti iš vieno USB.",
-      m:["Proxmox","Wazuh SIEM","Nextcloud","osTicket","Authelia SSO","NIS2 evidence"], kn:"6", kl:"hostai · 1 žmogus"},
-   en:{h:"An enterprise-grade homelab run by one person", p:"A six-host environment with Wazuh SIEM, Nextcloud, an osTicket help desk and an Authelia SSO gateway — all behind Cloudflare zero-trust access. NIS2 evidence is generated automatically, and the whole stack restores from a single USB stick.",
-      m:["Proxmox","Wazuh SIEM","Nextcloud","osTicket","Authelia SSO","NIS2 evidence"], kn:"6", kl:"hosts · 1 person"}},
+   lt:{h:"Savo talpinamas saugumo ir atitikties rinkinys", p:"Nuo nulio pastatytas ir prižiūrimas saugumo stackas: Wazuh SIEM realaus laiko stebėjimui, Authelia SSO su MFA ir Cloudflare nulinio pasitikėjimo prieiga, o NIS2 atitikties įrodymai generuojami automatiškai. Viskas savo geležyje, atkuriama iš vieno USB.",
+      m:["Wazuh SIEM","Authelia SSO","Zero-trust","NIS2 evidence","self-hosted"], kn:"24/7", kl:"realaus laiko SIEM"},
+   en:{h:"A self-hosted security & compliance stack", p:"A security stack built and operated from scratch: Wazuh SIEM for real-time monitoring, Authelia SSO with MFA and Cloudflare zero-trust access, with NIS2 compliance evidence generated automatically. All on my own hardware, restorable from a single USB.",
+      m:["Wazuh SIEM","Authelia SSO","Zero-trust","NIS2 evidence","self-hosted"], kn:"24/7", kl:"real-time SIEM"}},
   {idx:"02", d:"ai",
    lt:{h:"Parduotas komercinis kompiuterinės regos produktas", p:"Traffic Counter skaičiuoja transporto srautą iš kamerų su YOLO11, sprendžia naktinio apšvietimo ir kamerų laikrodžio OCR problemas, pats parenka modelį. Supakuotas kaip Windows programa, parduotas pirmam klientui — su registruota individualia veikla.",
       m:["YOLO11","OCR","auto-tune","Windows .exe","individuali veikla"], kn:"3000€", kl:"pirmas klientas"},
