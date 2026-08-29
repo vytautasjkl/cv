@@ -156,6 +156,32 @@
   .empty{grid-column:1/-1; text-align:center; color:var(--faint); font-family:var(--mono); font-size:13px; padding:40px}
   @media(max-width:900px){.grid{grid-template-columns:1fr 1fr}}
   @media(max-width:620px){.grid{grid-template-columns:1fr}}
+  .card{cursor:pointer}
+  .card:focus-visible{outline:2px solid var(--dc,var(--cyan)); outline-offset:2px}
+  .card .more{color:var(--dc,var(--cyan)); font-weight:700; white-space:nowrap; opacity:0; transform:translateX(-4px); transition:opacity .18s, transform .18s}
+  .card:hover .more,.card:focus-visible .more{opacity:1; transform:none}
+
+  /* ---------- MODAL ---------- */
+  .overlay{position:fixed; inset:0; z-index:100; display:none; align-items:center; justify-content:center; padding:22px;
+    background:rgba(4,6,12,.74); backdrop-filter:blur(9px)}
+  .overlay.open{display:flex}
+  .modal{position:relative; width:100%; max-width:660px; max-height:88vh; overflow-y:auto;
+    background:linear-gradient(180deg,var(--bg3),var(--bg2)); border:1px solid var(--line2); border-top:3px solid var(--dc,var(--cyan));
+    border-radius:18px; padding:34px clamp(22px,4vw,40px); box-shadow:0 40px 100px -30px rgba(0,0,0,.9)}
+  .modal .mtop{display:flex; align-items:center; gap:10px; margin-bottom:16px}
+  .modal .mdom{font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--dc,var(--cyan)); font-weight:700}
+  .modal .mst{font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:.06em; padding:3px 9px; border-radius:5px}
+  .modal h3{font-family:var(--disp); font-weight:800; font-size:clamp(1.5rem,3vw,2rem); letter-spacing:-.02em; line-height:1.08; margin:0 0 16px}
+  .modal .mtext{color:var(--muted); font-size:1rem; line-height:1.68; margin:0 0 20px}
+  .modal .mpts{list-style:none; margin:0 0 22px; padding:0; display:grid; gap:9px}
+  .modal .mpts li{position:relative; padding-left:24px; color:var(--ink); font-size:.95rem}
+  .modal .mpts li::before{content:""; position:absolute; left:4px; top:9px; width:7px; height:7px; border-radius:2px; background:var(--dc,var(--cyan)); transform:rotate(45deg)}
+  .modal .mtech{font-family:var(--mono); font-size:12px; color:var(--faint); border-top:1px solid var(--line); padding-top:16px; display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:space-between}
+  .modal .mlink{color:var(--dc,var(--cyan)); font-weight:700}
+  .modal .mlink:hover{text-decoration:underline}
+  .modal .mclose{position:absolute; top:16px; right:16px; width:34px; height:34px; border-radius:9px; border:1px solid var(--line2);
+    background:transparent; color:var(--muted); font-size:16px; cursor:pointer; line-height:1; transition:all .16s}
+  .modal .mclose:hover{color:var(--ink); border-color:var(--cyan)}
 
   /* ---------- AI SECTION ---------- */
   .ai-wrap{display:grid; grid-template-columns:1fr 1fr; gap:44px; align-items:center}
@@ -365,6 +391,13 @@
 </section>
 </main>
 
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="modal" id="modal">
+    <button class="mclose" id="mClose" aria-label="Uždaryti">✕</button>
+    <div id="mBody"></div>
+  </div>
+</div>
+
 <footer>
   <div class="wrap foot-row">
     <span>© 2026 Vytautas Jocaitis</span>
@@ -496,6 +529,83 @@ var SYSTEMS = [
    en:"Recovering personal photos from a physically failing 2 TB NAS drive: a safe ddrescue image first, then PhotoRec — never writing to the original."}
 ];
 
+// Detalus paaiškinimas paspaudus kortelę. pts = [[lt,en],...] highlight'ai. url = gyva nuoroda.
+var DETAILS = {
+ "Wazuh SIEM":{lt:"Pilnas Wazuh 4.14.4 SIEM įdiegimas nuo nulio — manager, indexer ir dashboard. Parašiau savas aptikimo taisykles (100xxx serija) ir dekoderius, sukūriau agentų diegimo serverį (nginx, :8080) masiniam agentų platinimui ir atskirą React saugumo skydelį (:8081) su OpenSearch autentifikacija. Papildomi Wazuh-UI skydeliai Suricata, Docker ir kompiuterių inventoriui, plius pilnas atkūrimo vadovas (tas pats arba naujas hostas). Realiai apie 6 mėnesių derinimo darbas.",
+   en:"A full Wazuh 4.14.4 SIEM deployment from scratch — manager, indexer and dashboard. I wrote custom detection rules (the 100xxx series) and decoders, built an agent-installer server (nginx, :8080) for mass rollout and a separate React security dashboard (:8081) with OpenSearch auth. Extra Wazuh-UI dashboards for Suricata, Docker and PC inventory, plus a full restore runbook (same or new host). Realistically about 6 months of tuning.",
+   pts:[["Savos aptikimo taisyklės (100xxx) + dekoderiai","Custom detection rules (100xxx) + decoders"],["Agentų diegimo serveris masiniam platinimui (:8080)","Agent-installer server for mass rollout (:8080)"],["Custom React saugumo skydelis, OpenSearch auth (:8081)","Custom React security dashboard, OpenSearch auth (:8081)"],["Suricata / Docker / inventoriaus skydeliai + atkūrimo vadovas","Suricata / Docker / inventory dashboards + restore runbook"]]},
+ "Zero-trust SSO vartai":{lt:"Vienos prisijungimo vietos (SSO) vartai visoms vidinėms paslaugoms: Caddy reverse proxy priešakyje + Authelia autentifikacijai su dviejų veiksnių (MFA) apsauga. Vartotojas prisijungia vieną kartą ir saugiai pasiekia visus vidinius įrankius; neautentifikuotas srautas toliau nepraeina.",
+   en:"A single-sign-on gateway for every internal service: a Caddy reverse proxy in front + Authelia for authentication with two-factor (MFA). Users sign in once and reach all internal tools securely; unauthenticated traffic never gets through.",
+   pts:[["Vienas prisijungimas visoms paslaugoms","One login for every service"],["Authelia + MFA (dviejų veiksnių)","Authelia + MFA (two-factor)"],["Nulinio pasitikėjimo principas","Zero-trust by default"]]},
+ "Self-hosted Nextcloud":{lt:"Privatus „Google Drive“ pakaitalas savo geležyje — Nextcloud su individualia tema ir pilnu failų, kalendorių ir naudotojų valdymu. Docker'yje, su savo atsarginėmis kopijomis; duomenys niekada nepalieka namų tinklo.",
+   en:"A private Google-Drive replacement on my own hardware — Nextcloud with a custom theme and full file, calendar and user management. In Docker, with its own backups; data never leaves the home network."},
+ "osTicket Helpdesk":{lt:"Pilnavertė pagalbos tarnybos sistema: pritaikytas osTicket su el. pašto integracija, bilietų srautais, SLA ir naudotojų vaidmenimis. Docker'yje, su SMTP ir atkūrimo procedūra — vidiniam IT palaikymui priimti ir sekti užklausas.",
+   en:"A full help-desk system: a customized osTicket with email integration, ticket workflows, SLAs and user roles. In Docker, with SMTP and a restore procedure — for internal IT support to intake and track requests."},
+ "NIS2 / KSĮ atitiktis":{lt:"Kibernetinio saugumo atitiktis (NIS2 / Lietuvos KSĮ) kaip parduodama paslauga. Sukūriau pardavimų playbook'ą su 3 pakopų kainodara ir vykdymo įrankius: SIEM stebėjimą, incidentų valdymo tvarką, 10 lietuviškų atitikties dokumentų ir įrodymų generatorių. Su patvirtintomis įstatymų citatomis.",
+   en:"Cybersecurity compliance (NIS2 / Lithuania's KSĮ) as a sellable service. I built a sales playbook with 3-tier pricing and delivery tooling: SIEM monitoring, an incident-response process, 10 Lithuanian compliance documents and an evidence generator. With verified legal citations.",
+   pts:[["3 pakopų paslaugos modelis + kainodara","3-tier service model + pricing"],["10 LT atitikties dokumentų","10 Lithuanian compliance documents"],["Įrodymų (evidence) generatorius","Compliance-evidence generator"]]},
+ "Klientų atsisiuntimų portalas":{lt:"Saugus failų perdavimo portalas pirkėjams: kiekvienas gauna savo subdomeną su izoliuotu folderiu ir prisijungia vienkartiniu PIN kodu į el. paštą (be slaptažodžių). Didelius (2.5 GB) failus atsisiunčia patikimai su atnaujinimo (resume) palaikymu. Sukuriama vienu skriptu per Cloudflare API + QNAP.",
+   en:"A secure file-delivery portal for buyers: each gets their own subdomain with an isolated folder and signs in with a one-time PIN to email (no passwords). Large (2.5 GB) files download reliably with resume support. Provisioned by a single script via the Cloudflare API + QNAP.",
+   pts:[["Kiekvienam klientui izoliuotas folderis","Isolated folder per client"],["Vienkartinis PIN (be slaptažodžių)","One-time PIN (no passwords)"],["2.5 GB atsisiuntimai su resume","2.5 GB downloads with resume"],["Sukuriama vienu skriptu","Provisioned by one script"]]},
+ "analyze-exe":{lt:"Įrankis įtartiniems Windows binarams tirti jų nepaleidžiant. Statiškai ištraukia importus, capa gebėjimus ir strings, tada lokalus necenzūruotas modelis paaiškina, ką programa daro (tinklas / failai / registras / injekcijos / persistencija / kripto), pažymi raudonas vėliavas ir pateikia benign / įtartina / kenkėjiška verdiktą.",
+   en:"A tool to examine suspicious Windows binaries without running them. It statically extracts imports, capa capabilities and strings, then a local uncensored model explains what the program does (network / files / registry / injection / persistence / crypto), flags red flags and gives a benign / suspicious / malicious verdict."},
+ "pass slaptažodžių saugykla":{lt:"Centralizuota, 100 % lokali GPG-šifruota slaptažodžių saugykla. Skriptai iš jos ima API raktus darbui — niekada atviro teksto .env failuose. Viena tiesa visiems slaptažodžiams, šifruota tavo GPG raktu.",
+   en:"A centralized, fully local GPG-encrypted secrets store. Scripts pull API keys from it at run time — never plaintext in .env files. One source of truth for every secret, encrypted with your GPG key."},
+ "pfSense tinklas + ntopng":{lt:"Namų / biuro branduolio ugniasienė ant Intel N100: keli VLAN'ai su izoliacija, NAT persiuntimai, numatytas „deny“ ir reguliarūs saugumo auditai. Įdiegtas ntopng realaus laiko srauto matomumui. Su priežiūros žurnalu ir WAN maršrutizavimo pataisomis.",
+   en:"A core edge firewall on an Intel N100: multiple isolated VLANs, NAT forwards, default-deny and regular security audits. ntopng installed for real-time traffic visibility. With a maintenance log and WAN routing fixes."},
+ "QNAP NAS + QuMagie":{lt:"1.4 TB centrinė saugykla: SMB bendrinimai, nuotraukų platforma QuMagie ir Docker konteineriai, aptarnaujantys kelias gyvas svetaines. Prieiga sutvarkyta per ACL ir teises, su nuotoline prieiga per Cloudflare.",
+   en:"1.4 TB of central storage: SMB shares, the QuMagie photo platform and Docker containers serving several live sites. Access handled via ACLs and permissions, with remote access over Cloudflare."},
+ "Proxmox virtualizacija":{lt:"Atskiras virtualizacijos hostas: LXC konteineriai ir KVM virtualios mašinos — papildoma skaičiavimo ir saugyklos galia dideliems darbams (didelių diskų atvaizdai, atkūrimas, testinės aplinkos).",
+   en:"A dedicated virtualization host: LXC containers and KVM VMs — spare compute and storage for heavy jobs (large disk images, recovery, test environments)."},
+ "Cloudflare Zero-Trust prieiga":{lt:"Keli Cloudflare tuneliai atveria vidines paslaugas į internetą be jokių atvirų portų. Prie jautrių — Cloudflare Access su vienkartiniu PIN. Vienas mechanizmas maitina nuotolinę failų platformą, klientų portalus, nuotolinę AI aplinką ir šitą CV.",
+   en:"Several Cloudflare tunnels expose internal services to the internet with zero open ports. Sensitive ones sit behind Cloudflare Access with a one-time PIN. One mechanism powers the remote file platform, client portals, the remote AI environment and this very CV.",
+   pts:[["Nulis atvirų portų į namų tinklą","Zero open ports into the home network"],["Vienkartinis PIN prie jautrių paslaugų","One-time PIN on sensitive services"],["Vienas mechanizmas daugeliui paslaugų","One mechanism, many services"]]},
+ "Automatinis atsarginis kopijavimas":{lt:"Daugiasluoksnė atsarginių kopijų sistema: naktinis rsync į NAS + pilni sistemos momentiniai vaizdai (tarball + vzdump) į USB su patikrintu atkūrimu ir rotacija. Su vientisumo tikrinimu, kad kopijos tikrai atkuriamos.",
+   en:"A layered backup system: nightly rsync to the NAS + full system snapshots (tarball + vzdump) to USB with verified restore and rotation. With integrity checks so the backups actually restore."},
+ "dotfiles":{lt:"Privatus, atkuriamas terminalo ir darbo aplinkos konfigūracijos repo — vienu skriptu paruošiama nauja mašina (zellij, aliasai, įrankiai). Slaptažodžiai ir asmeniniai duomenys sąmoningai neįtraukti.",
+   en:"A private, reproducible terminal & workspace config repo — one script provisions a fresh machine (zellij, aliases, tools). Secrets and personal data deliberately excluded."},
+ "vytautas.it":{lt:"Mano paslaugų ir portfolio tinklalapis: React + Vite + Tailwind, diegiamas į Cloudflare krašto tinklą per wrangler. Turi atskirą NIS2 atitikties nukreipimo puslapį. Domenas ir DNS valdomi Cloudflare, su automatiniu SSL.",
+   en:"My services & portfolio site: React + Vite + Tailwind, deployed to the Cloudflare edge via wrangler. Includes a dedicated NIS2 compliance landing page. Domain and DNS managed on Cloudflare, with automatic SSL.",
+   url:"https://vytautas.it"},
+ "Gražjūrio baidarės":{lt:"Realaus kliento verslo svetainė, perdaryta iš WordPress į lengvą savos gamybos PHP CMS (turinys JSON'e, be DB). Klientė turinį — tekstus, kainas, galerijas — redaguoja gyvai per admin skydelį (drag-and-drop). Talpinama ant NAS per Cloudflare tunelį; su CSRF apsauga ir lightbox galerijomis.",
+   en:"A real client's business site, rebuilt from WordPress into a lightweight custom PHP CMS (content in JSON, no DB). The client edits content — text, prices, galleries — live via an admin panel (drag-and-drop). Hosted on the NAS via a Cloudflare tunnel; with CSRF protection and lightbox galleries.",
+   url:"https://pasroviui.vytautas.it"},
+ "Spinta":{lt:"Virtualios drabužinės socialinė platforma — pilnas stack'as (React + Express + SQLite) su naudotojais, drabužių įkėlimais ir kanalu. Idėja: susikuri skaitmeninę spintą ir daliniesi derinius.",
+   en:"A virtual-wardrobe social platform — a full stack (React + Express + SQLite) with users, garment uploads and a feed. The idea: build a digital wardrobe and share outfits."},
+ "ERP offline sandbox":{lt:"Sudėtingos verslo ERP sistemos offline klonas React'e: atkurtas UI ir skaičiavimai iš registro, bet nesijungia prie jokio serverio. Saugi „smėlio dėžė“ mokymuisi ir demonstracijoms be rizikos gyvai sistemai.",
+   en:"An offline clone of a complex business ERP in React: UI and calculations reproduced from the registry, but connected to no server. A safe sandbox for training and demos with no risk to a live system."},
+ "Traffic Counter":{lt:"Komercinė kompiuterinės regos programa, skaičiuojanti transporto srautą iš eismo kamerų su YOLO11. Nueita nuo pirmo aptikimo (v0.1) iki 14+ versijų produkto (v4.4) su pilnu changelog'u. Sprendžiau realias problemas: dviejų kamerų (SJCAM ir Hikvision) „įdegto“ laikrodžio OCR nuskaitymą (net kai tekstas keičia spalvą juoda↔balta), tikslų trukmių skaičiavimą be dubliavimo tarp failų, GPU/CPU aptikimą ir modelio (nano/small/medium/large) parinkimą pagal tikslumą. Supakuota kaip Windows programa, parduota pirmam klientui už 3000 €.",
+   en:"A commercial computer-vision app counting vehicle traffic from cameras with YOLO11. Went from first detection (v0.1) to a 14+ version product (v4.4) with a full changelog. Solved real problems: OCR of two cameras' (SJCAM and Hikvision) burned-in clocks — even when the text flips black↔white over the background — exact duration math without double-counting file overlaps, GPU/CPU detection and model selection (nano/small/medium/large) by accuracy. Packaged as a Windows app, sold to the first client for €3,000.",
+   pts:[["YOLO11 (nano→large), tikslumo/greičio auto-derinimas","YOLO11 (nano→large) with accuracy/speed auto-tuning"],["Dviejų kamerų laikrodžio OCR (polarity-agnostic)","Two-camera clock OCR (polarity-agnostic)"],["v0.1 → v4.4, 14+ versijų, pilnas changelog","v0.1 → v4.4, 14+ releases, full changelog"],["Parduota · registruota individuali veikla","Sold · registered sole-trader business"]]},
+ "vietinis-ai":{lt:"Lokalus, visiškai offline AI pokalbių serveris ant GPU (Ollama + qwen) su savo web sąsaja. Duomenys niekur nesiunčiami — privatus asistentas, veikiantis be interneto ir be prenumeratų.",
+   en:"A local, fully offline AI chat server on the GPU (Ollama + qwen) with its own web UI. Data is sent nowhere — a private assistant that runs without internet and without subscriptions."},
+ "pdf-ai":{lt:"Lokalus necenzūruotas AI kartu su pilnu PDF įrankių rinkiniu viename lange: OCR (LT+EN), konvertavimas į/iš Word, puslapių jungimas/skaidymas/sukimas, teksto redagavimas ir formų pildymas. Komandas paprasta kalba („pakeisk X į Y“) modelis paverčia realiais failo veiksmais. Veikia kaip systemd servisas.",
+   en:"A local uncensored AI alongside a full PDF toolkit in one window: OCR (LT+EN), conversion to/from Word, page merge/split/rotate, text editing and form-filling. Plain-language commands (“change X to Y”) are turned into real file operations by the model. Runs as a systemd service."},
+ "zeus AI serveris":{lt:"Windows GPU mašina (RTX 3060), paversta necenzūruoto AI serveriu: Ollama su 14B ir 27B (abliteruotais) modeliais, pasiekiama nuotoliniu būdu per SSH tunelį ir Open WebUI. Autostart sutvarkytas per suplanuotą užduotį, kai GUI programa lūžo.",
+   en:"A Windows GPU box (RTX 3060) turned into an uncensored AI server: Ollama with 14B and 27B (abliterated) models, reachable remotely via an SSH tunnel and Open WebUI. Autostart fixed via a Scheduled Task after the GUI app broke."},
+ "DeepSeek maršrutizatorius":{lt:"CLI ir web agentas, nukreipiantys pigias smulkias užduotis (santraukos, vertimai, boilerplate) į DeepSeek API, kad brangūs modeliai būtų taupomi. Kaštų optimizacija automatiškai; raktai imami iš GPG saugyklos.",
+   en:"A CLI and web agent that route cheap subtasks (summaries, translations, boilerplate) to the DeepSeek API to conserve premium models. Cost optimization automatically; keys pulled from the GPG store."},
+ "CloudCLI nuotolinė AI aplinka":{lt:"Pilna AI kodavimo aplinka, pasiekiama iš bet kur per naršyklę — per Cloudflare tunelį ir Access. Su savos gamybos plugin'ais: žinių grafo „Atmintis“ tab'as ir draw.io stiliaus tinklo žemėlapis, integruoti į UI.",
+   en:"A full AI coding environment reachable from anywhere in the browser — over a Cloudflare tunnel and Access. With custom plugins: a knowledge-graph “Memory” tab and a draw.io-style network map, integrated into the UI."},
+ "Basic Memory (MCP)":{lt:"Žinių grafo atmintis kaip MCP serveris: AI įsimena kontekstą tarp sesijų Markdown užrašuose, kuriuos galima naršyti kaip grafą (Obsidian ir naršyklė). Papildo įmontuotą atmintį, jos nepakeisdama.",
+   en:"A knowledge-graph memory as an MCP server: the AI remembers context across sessions in Markdown notes, browsable as a graph (Obsidian and the browser). Augments the built-in memory without replacing it."},
+ "Kriptoportfelio botas":{lt:"Kriptovaliutų portfelio VWAP rebalansavimo botas (11 monetų, Kraken API), veikiantis 24/7 kaip systemd servisas. Rebalansuoja tik prieš investuotą krepšelį ir tik su pelnu (profit-only), su ±10 % deadband'u. Šalia — always-on-top valdymo lentelė ir kritimo įspėjimai.",
+   en:"A crypto-portfolio VWAP rebalancing bot (11 coins, Kraken API) running 24/7 as a systemd service. It rebalances only against the invested basket and only at a profit (profit-only), with a ±10% deadband. Alongside — an always-on-top dashboard and dip alerts.",
+   pts:[["11 monetų VWAP rebalansas","11-coin VWAP rebalancing"],["Profit-only, ±10 % deadband","Profit-only, ±10% deadband"],["24/7 systemd servisas + widget + įspėjimai","24/7 systemd service + widget + alerts"]]},
+ "tg-fb konvejeris":{lt:"Automatinis turinio srautas: Telegram įrašai → DeepL vertimas į lietuvių → web peržiūra ir redagavimas → skelbimas Facebook puslapyje. Telethon + FastAPI; žmogus tik peržiūri prieš publikuojant.",
+   en:"An automated content pipeline: Telegram posts → DeepL translation to Lithuanian → web review and editing → publishing to a Facebook page. Telethon + FastAPI; a human only reviews before publishing."},
+ "mapas":{lt:"Įrankis, kuris iš atminties failų sugeneruoja vieną neoninę visos infrastruktūros topologijos diagramą — draw.io/Cisco stiliaus tinklo žemėlapį su pan/zoom ir tempiamais mazgais. Yra ir kaip komanda, ir kaip naršyklės plugin'as.",
+   en:"A tool that generates a single neon topology diagram of the whole infrastructure from memory files — a draw.io/Cisco-style network map with pan/zoom and draggable nodes. Available both as a command and a browser plugin."},
+ "diskas":{lt:"Terminalo disko vietos skydelis su neoniniais blokiniais grafikais ir lietuviškais užrašais — iškart matai, kurie diskai ir aplankai užima daugiausiai. Viena komanda `diskas` arba `diskas /kelias` giliam skenavimui.",
+   en:"A terminal disk-space dashboard with neon block bars and Lithuanian labels — instantly see which drives and folders take the most space. One command `diskas`, or `diskas /path` to deep-scan."},
+ "Būsto planuoklis":{lt:"Vieno failo, offline būsto pirkimo planuoklis su canvas grafikais: kaupimo trukmė su judančiu taikiniu (butas brangsta kol kaupi), skolinimosi galia (DSTI), paskolos amortizacija ir „nuomotis vs pirkti“ palyginimas. Be išorinių priklausomybių.",
+   en:"A single-file, offline home-buying planner with canvas charts: savings timeline with a moving target (the flat rises while you save), borrowing power (DSTI), loan amortization and a rent-vs-buy comparison. With no external dependencies."},
+ "skelbiu skreiperis":{lt:"NT skelbimų rinkimas pro Cloudflare „ne robotas“ apsaugą: valdau tikrą naršyklę per CDP protokolą, todėl realus IP ir naršyklė praeina patikras automatiškai. Filtruoja pagal kainą, plotą, vietą; rezultatai suvedami peržiūrai.",
+   en:"Scraping real-estate listings past Cloudflare's “not a robot” check: I drive a real browser over the CDP protocol, so a real IP and browser pass the checks automatically. Filters by price, area, location; results collected for review."},
+ "HDD nuotraukų atkūrimas":{lt:"Asmeninių nuotraukų atkūrimas iš fiziškai mirštančio 2 TB NAS disko. Metodika kaip su mirštančiu disku: pirmiausia saugus ddrescue atvaizdas (jokių rašymų į originalą), tada PhotoRec atkūrimas nuo atvaizdo, rūšiavimas pagal metus per EXIF. Atsargiai ir metodiškai.",
+   en:"Recovering personal photos from a physically failing 2 TB NAS drive. Treated like a dying disk: first a safe ddrescue image (no writes to the original), then PhotoRec recovery from the image, sorted by year via EXIF. Careful and methodical."}
+};
+
 var CAPS = [
   {id:"sec", lt:{h:"Kibernetinis saugumas & NIS2", p:"SIEM, ugniasienės, nulinio pasitikėjimo prieiga, incidentų valdymas ir NIS2/KSĮ atitiktis — nuo audito iki gyvo diegimo.",
     t:["Wazuh SIEM","pfSense","Cloudflare Access","Authelia SSO","malware analizė","atitikties dokumentai"]},
@@ -583,6 +693,7 @@ var I18N = {
     ct_eye:"// pakalbėkim", ct_h:"Ieškau rimto vaidmens ir atlygio, atitinkančio tai, ką sukuriu.",
     ct_p:"Jei jums reikia žmogaus, kuris su dirbtiniu intelektu paverčia idėjas veikiančiais produktais — nuo saugumo iki web — pradėkim pokalbį.",
     ct_cta1:"Rašyti el. laišką", ct_cta2:"vytautas.it ↗",
+    more:"Plačiau", live:"Atidaryti gyvai ↗",
     foot:"Sukurta žmogaus, kuris valdo dirbtinį intelektą."
   },
   en:{
@@ -604,6 +715,7 @@ var I18N = {
     ct_eye:"// let's talk", ct_h:"I'm looking for a serious role — and pay that matches what I build.",
     ct_p:"If you need someone who turns ideas into working products with AI — from security to web — let's start a conversation.",
     ct_cta1:"Send an email", ct_cta2:"vytautas.it ↗",
+    more:"Details", live:"Open live ↗",
     foot:"Built by a human who directs artificial intelligence."
   }
 };
@@ -689,11 +801,64 @@ function renderGrid(){
     card.appendChild(el("p",null,s[lang]));
     var foot=el("div","foot");
     foot.appendChild(el("span","tech",s.tech));
+    foot.appendChild(el("span","more",I18N[lang].more+" →"));
     card.appendChild(foot);
+    card.setAttribute("role","button");
+    card.setAttribute("tabindex","0");
+    card.setAttribute("aria-label",s.n);
+    card.addEventListener("click",function(){ openDetail(s); });
+    card.addEventListener("keydown",function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openDetail(s); } });
     c.appendChild(card);
   });
   observeReveal();
 }
+
+/* ---------------- DETAIL MODAL ---------------- */
+var lastFocus=null;
+function openDetail(s){
+  var body=document.getElementById("mBody"); body.textContent="";
+  var dom=DOMAINS.filter(function(x){return x.id===s.d;})[0];
+  var det=DETAILS[s.n]||{};
+  var accent=DC[s.d];
+  document.getElementById("modal").style.setProperty("--dc",accent);
+
+  var top=el("div","mtop");
+  top.appendChild(el("span","mdom",dom[lang]));
+  var st=el("span","mst"); st.textContent=STATUS[s.s][lang];
+  st.style.color=STATUS[s.s].c; st.style.background="color-mix(in srgb,"+STATUS[s.s].c+" 15%, transparent)";
+  top.appendChild(st);
+  body.appendChild(top);
+
+  var h=el("h3",null,s.n); h.id="mTitle"; body.appendChild(h);
+  body.appendChild(el("p","mtext", det[lang]||s[lang]));
+
+  if(det.pts && det.pts.length){
+    var ul=el("ul","mpts");
+    det.pts.forEach(function(p){ ul.appendChild(el("li",null, lang==="lt"?p[0]:p[1])); });
+    body.appendChild(ul);
+  }
+
+  var tech=el("div","mtech");
+  tech.appendChild(el("span","mtechlist",s.tech));
+  if(det.url){
+    var a=el("a","mlink",I18N[lang].live); a.href=det.url; a.target="_blank"; a.rel="noopener";
+    tech.appendChild(a);
+  }
+  body.appendChild(tech);
+
+  lastFocus=document.activeElement;
+  var ov=document.getElementById("overlay"); ov.classList.add("open");
+  document.body.style.overflow="hidden";
+  document.getElementById("mClose").focus();
+}
+function closeDetail(){
+  document.getElementById("overlay").classList.remove("open");
+  document.body.style.overflow="";
+  if(lastFocus && lastFocus.focus) lastFocus.focus();
+}
+document.getElementById("mClose").addEventListener("click",closeDetail);
+document.getElementById("overlay").addEventListener("click",function(e){ if(e.target.id==="overlay") closeDetail(); });
+document.addEventListener("keydown",function(e){ if(e.key==="Escape" && document.getElementById("overlay").classList.contains("open")) closeDetail(); });
 
 function renderStack(){
   var c=document.getElementById("stack"); c.textContent="";
