@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vytautas Jocaitis — AI-native IT inžinierius</title>
+<meta name="description" content="Vieno žmogaus IT skyrius. Su dirbtiniu intelektu sukurta ir paleista dešimtys realių sistemų — nuo kibernetinio saugumo iki gyvų produktų internete." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#070A12; --bg2:#0B1020; --bg3:#111A2E;
+    --line:rgba(126,156,196,0.12); --line2:rgba(126,156,196,0.24);
+    --ink:#EAF0FB; --muted:#9AA6BD; --faint:#5E6B85;
+    --cyan:#2FE4D0; --violet:#8B7CFF; --amber:#FFC24B; --green:#45E39A; --blue:#7FB2FF; --red:#FF7A7A;
+    --disp:"Bricolage Grotesque",-apple-system,system-ui,sans-serif;
+    --body:"Inter",-apple-system,system-ui,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --max:1180px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--body); font-size:16px; line-height:1.6;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(900px 520px at 82% -8%, rgba(139,124,255,0.16), transparent 60%),
+      radial-gradient(820px 520px at 8% 4%, rgba(47,228,208,0.12), transparent 58%),
+      radial-gradient(1100px 700px at 50% 118%, rgba(47,228,208,0.06), transparent 60%);
+  }
+  a{color:inherit; text-decoration:none}
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 24px; position:relative; z-index:1}
+  .eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--cyan); font-weight:500}
+  .mono{font-family:var(--mono)}
+  .grad{background:linear-gradient(96deg,var(--cyan),var(--violet)); -webkit-background-clip:text; background-clip:text; color:transparent}
+
+  /* ---------- NAV ---------- */
+  header.nav{position:sticky; top:0; z-index:50; backdrop-filter:blur(14px);
+    background:linear-gradient(180deg,rgba(7,10,18,0.92),rgba(7,10,18,0.55));
+    border-bottom:1px solid var(--line)}
+  .navrow{display:flex; align-items:center; justify-content:space-between; height:64px; gap:16px}
+  .brand{font-family:var(--disp); font-weight:800; font-size:19px; letter-spacing:-.01em; display:flex; align-items:center; gap:10px}
+  .brand .dot{width:9px; height:9px; border-radius:50%; background:var(--green); box-shadow:0 0 0 4px rgba(69,227,154,0.18); animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+  @media (prefers-reduced-motion:reduce){.brand .dot{animation:none}}
+  .navlinks{display:flex; gap:26px; align-items:center}
+  .navlinks a{font-size:14px; color:var(--muted); font-weight:500; transition:color .18s}
+  .navlinks a:hover{color:var(--ink)}
+  .navtools{display:flex; align-items:center; gap:12px}
+  .lang{display:inline-flex; border:1px solid var(--line2); border-radius:999px; overflow:hidden; font-family:var(--mono); font-size:12px}
+  .lang button{background:transparent; color:var(--muted); border:0; padding:7px 12px; cursor:pointer; font-family:inherit; font-size:inherit; letter-spacing:.05em}
+  .lang button.on{background:linear-gradient(96deg,rgba(47,228,208,.22),rgba(139,124,255,.22)); color:var(--ink)}
+  .btn{display:inline-flex; align-items:center; gap:9px; font-family:var(--mono); font-size:13px; font-weight:500; letter-spacing:.02em;
+    padding:10px 18px; border-radius:999px; cursor:pointer; transition:transform .16s, box-shadow .2s, background .2s; border:1px solid transparent}
+  .btn-primary{background:linear-gradient(96deg,var(--cyan),var(--violet)); color:#05070d; font-weight:700}
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 12px 34px -12px rgba(139,124,255,.7)}
+  .btn-ghost{border-color:var(--line2); color:var(--ink)}
+  .btn-ghost:hover{border-color:var(--cyan); color:var(--cyan)}
+  @media(max-width:820px){.navlinks{display:none}}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative; min-height:calc(100vh - 64px); display:flex; align-items:center; padding:70px 0 60px; overflow:hidden}
+  #constellation{position:absolute; inset:0; width:100%; height:100%; z-index:0}
+  .hero .wrap{width:100%}
+  .hero-grid{display:grid; grid-template-columns:1.15fr .85fr; gap:40px; align-items:center}
+  .hero-tag{display:inline-flex; align-items:center; gap:10px; padding:7px 14px; border:1px solid var(--line2); border-radius:999px;
+    font-family:var(--mono); font-size:12px; color:var(--muted); letter-spacing:.06em; margin-bottom:26px}
+  .hero-tag b{color:var(--green); font-weight:700}
+  h1.hero-h{font-family:var(--disp); font-weight:800; line-height:1.02; letter-spacing:-.025em; margin:0 0 22px;
+    font-size:clamp(2.5rem,6.4vw,5rem)}
+  .hero-sub{font-size:clamp(1.02rem,1.5vw,1.22rem); color:var(--muted); max-width:38ch; margin:0 0 30px}
+  .hero-sub b{color:var(--ink); font-weight:600}
+  .hero-cta{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:30px}
+  .hero-meta{display:flex; gap:26px; flex-wrap:wrap; font-family:var(--mono); font-size:12.5px; color:var(--faint)}
+  .hero-meta span{display:flex; align-items:center; gap:8px}
+  .hero-meta i{width:5px; height:5px; border-radius:50%; background:var(--cyan); font-style:normal}
+
+  /* console card */
+  .console{background:linear-gradient(180deg,rgba(17,26,46,.72),rgba(11,16,32,.72)); border:1px solid var(--line2); border-radius:16px;
+    font-family:var(--mono); font-size:13px; overflow:hidden; box-shadow:0 30px 80px -40px rgba(0,0,0,.8)}
+  .console-bar{display:flex; align-items:center; gap:8px; padding:12px 15px; border-bottom:1px solid var(--line); color:var(--faint); font-size:11.5px}
+  .console-bar .d{width:10px; height:10px; border-radius:50%}
+  .console-body{padding:16px 18px; line-height:1.85}
+  .console-body .l{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .console-body .c{color:var(--faint)}
+  .console-body .ok{color:var(--green)}
+  .console-body .k{color:var(--cyan)}
+  .console-body .v{color:var(--violet)}
+  .console-body .a{color:var(--amber)}
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr; gap:34px} .console{order:2}}
+
+  /* ---------- SECTION SHELL ---------- */
+  section{position:relative; z-index:1}
+  .band{padding:96px 0}
+  .band-head{max-width:720px; margin-bottom:52px}
+  .band-head h2{font-family:var(--disp); font-weight:700; letter-spacing:-.02em; line-height:1.05; margin:14px 0 16px;
+    font-size:clamp(1.9rem,3.6vw,2.9rem)}
+  .band-head p{color:var(--muted); font-size:1.05rem; margin:0}
+  .rule{height:1px; background:linear-gradient(90deg,var(--line2),transparent); border:0; margin:0}
+
+  /* ---------- THESIS ---------- */
+  .thesis{border:1px solid var(--line); border-radius:20px; padding:clamp(30px,5vw,60px);
+    background:linear-gradient(180deg,rgba(17,26,46,.5),rgba(11,16,32,.3))}
+  .thesis .big{font-family:var(--disp); font-weight:700; letter-spacing:-.02em; line-height:1.14;
+    font-size:clamp(1.5rem,3.1vw,2.35rem); margin:0 0 22px}
+  .thesis .big u{text-decoration:none; border-bottom:2px solid var(--violet); padding-bottom:1px}
+  .thesis .sup{color:var(--muted); font-size:1.05rem; max-width:66ch; margin:0}
+
+  /* ---------- STATS ---------- */
+  .stats{display:grid; grid-template-columns:repeat(6,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:16px; overflow:hidden}
+  .stat{background:var(--bg); padding:26px 20px}
+  .stat .n{font-family:var(--disp); font-weight:800; font-size:clamp(1.9rem,3.4vw,2.7rem); line-height:1; letter-spacing:-.02em}
+  .stat .n .u{font-size:.5em; color:var(--cyan); font-family:var(--mono); font-weight:500; margin-left:2px}
+  .stat .l{font-family:var(--mono); font-size:11.5px; letter-spacing:.06em; color:var(--faint); margin-top:10px; text-transform:uppercase; line-height:1.4}
+  @media(max-width:900px){.stats{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:520px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+  /* ---------- CAPABILITIES ---------- */
+  .caps{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+  .cap{border:1px solid var(--line); border-radius:16px; padding:26px; background:rgba(11,16,32,.4); transition:border-color .2s, transform .2s}
+  .cap:hover{border-color:var(--line2); transform:translateY(-3px)}
+  .cap .ic{font-family:var(--mono); font-size:12px; font-weight:700; letter-spacing:.08em; padding:5px 10px; border-radius:6px; display:inline-block; margin-bottom:16px}
+  .cap h3{font-family:var(--disp); font-weight:700; font-size:1.2rem; margin:0 0 10px; letter-spacing:-.01em}
+  .cap p{color:var(--muted); font-size:.94rem; margin:0 0 16px}
+  .cap ul{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:6px}
+  .cap li{font-family:var(--mono); font-size:11px; color:var(--muted); border:1px solid var(--line); border-radius:5px; padding:4px 8px}
+  @media(max-width:900px){.caps{grid-template-columns:1fr 1fr}}
+  @media(max-width:620px){.caps{grid-template-columns:1fr}}
+
+  /* ---------- PORTFOLIO ---------- */
+  .filters{display:flex; flex-wrap:wrap; gap:9px; margin-bottom:30px}
+  .chip{font-family:var(--mono); font-size:12.5px; color:var(--muted); border:1px solid var(--line2); background:transparent;
+    padding:8px 15px; border-radius:999px; cursor:pointer; transition:all .16s; letter-spacing:.02em}
+  .chip:hover{color:var(--ink)}
+  .chip.on{color:#05070d; font-weight:700; border-color:transparent}
+  .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+  .card{border:1px solid var(--line); border-radius:14px; padding:22px; background:rgba(11,16,32,.5); position:relative; overflow:hidden;
+    display:flex; flex-direction:column; min-height:186px; transition:border-color .2s, transform .2s, box-shadow .2s}
+  .card::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--dc,var(--cyan)); opacity:.85}
+  .card:hover{transform:translateY(-4px); border-color:var(--line2); box-shadow:0 22px 50px -30px rgba(0,0,0,.9)}
+  .card .top{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:13px}
+  .card .dom{font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--dc,var(--cyan)); font-weight:700}
+  .card .st{font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:.06em; padding:3px 8px; border-radius:5px}
+  .card h3{font-family:var(--disp); font-weight:700; font-size:1.14rem; margin:0 0 8px; letter-spacing:-.01em; line-height:1.15}
+  .card p{color:var(--muted); font-size:.9rem; margin:0 0 14px; flex:1}
+  .card .foot{display:flex; align-items:center; justify-content:space-between; gap:8px; font-family:var(--mono); font-size:11px; color:var(--faint)}
+  .card .tech{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .card .lnk{color:var(--cyan); white-space:nowrap; display:inline-flex; align-items:center; gap:5px}
+  .card .lnk:hover{text-decoration:underline}
+  .empty{grid-column:1/-1; text-align:center; color:var(--faint); font-family:var(--mono); font-size:13px; padding:40px}
+  @media(max-width:900px){.grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:620px){.grid{grid-template-columns:1fr}}
+
+  /* ---------- AI SECTION ---------- */
+  .ai-wrap{display:grid; grid-template-columns:1fr 1fr; gap:44px; align-items:center}
+  .ai-copy h2{font-family:var(--disp); font-weight:700; font-size:clamp(1.9rem,3.6vw,2.9rem); letter-spacing:-.02em; line-height:1.06; margin:14px 0 18px}
+  .ai-copy p{color:var(--muted); font-size:1.05rem; margin:0 0 16px}
+  .ai-copy p b{color:var(--ink)}
+  .stack{display:grid; gap:12px}
+  .srow{display:grid; grid-template-columns:auto 1fr; gap:16px; align-items:start; border:1px solid var(--line); border-radius:12px; padding:16px 18px; background:rgba(11,16,32,.45)}
+  .srow .tag{font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.05em; color:var(--violet); padding-top:2px; white-space:nowrap}
+  .srow h4{font-family:var(--body); font-weight:600; font-size:.98rem; margin:0 0 4px}
+  .srow span{color:var(--muted); font-size:.86rem}
+  @media(max-width:900px){.ai-wrap{grid-template-columns:1fr; gap:30px}}
+
+  /* ---------- FLAGSHIPS ---------- */
+  .flags{display:grid; gap:16px}
+  .flag{display:grid; grid-template-columns:auto 1fr auto; gap:28px; align-items:center; border:1px solid var(--line); border-radius:18px;
+    padding:30px 34px; background:linear-gradient(100deg,rgba(17,26,46,.55),rgba(11,16,32,.3)); transition:border-color .2s}
+  .flag:hover{border-color:var(--line2)}
+  .flag .idx{font-family:var(--disp); font-weight:800; font-size:2.4rem; letter-spacing:-.03em; color:var(--dc,var(--cyan)); opacity:.55; line-height:1}
+  .flag h3{font-family:var(--disp); font-weight:700; font-size:1.35rem; margin:0 0 8px; letter-spacing:-.01em}
+  .flag p{color:var(--muted); font-size:.98rem; margin:0 0 12px; max-width:70ch}
+  .flag .meta{display:flex; flex-wrap:wrap; gap:7px}
+  .flag .meta b{font-family:var(--mono); font-weight:500; font-size:11px; color:var(--muted); border:1px solid var(--line); border-radius:5px; padding:4px 9px}
+  .flag .kpi{text-align:right; white-space:nowrap}
+  .flag .kpi .kn{font-family:var(--disp); font-weight:800; font-size:1.8rem; letter-spacing:-.02em; display:block; line-height:1}
+  .flag .kpi .kl{font-family:var(--mono); font-size:10.5px; color:var(--faint); letter-spacing:.05em; text-transform:uppercase; margin-top:6px; display:block}
+  @media(max-width:820px){.flag{grid-template-columns:auto 1fr; gap:16px 20px} .flag .kpi{grid-column:2; text-align:left}}
+
+  /* ---------- CONTACT ---------- */
+  .contact{border:1px solid var(--line2); border-radius:22px; padding:clamp(34px,5vw,64px); text-align:center;
+    background:radial-gradient(700px 340px at 50% -20%, rgba(139,124,255,.2), transparent 65%), rgba(11,16,32,.5)}
+  .contact h2{font-family:var(--disp); font-weight:800; font-size:clamp(2rem,4.6vw,3.4rem); letter-spacing:-.025em; line-height:1.03; margin:14px 0 18px}
+  .contact p{color:var(--muted); font-size:1.1rem; max-width:56ch; margin:0 auto 32px}
+  .contact .cta{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-bottom:34px}
+  .contact .lines{display:flex; gap:14px 34px; justify-content:center; flex-wrap:wrap; font-family:var(--mono); font-size:13px; color:var(--muted)}
+  .contact .lines a:hover{color:var(--cyan)}
+  .contact .lines i{color:var(--faint); font-style:normal}
+
+  footer{border-top:1px solid var(--line); padding:34px 0; margin-top:20px}
+  .foot-row{display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; font-family:var(--mono); font-size:12px; color:var(--faint)}
+
+  .reveal{opacity:0; transform:translateY(22px); transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1; transform:none}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1; transform:none; transition:none}}
+
+  @media print{
+    body::before,#constellation,header.nav,.hero-cta{display:none}
+    body{background:#fff; color:#111}
+    .card,.cap,.flag,.thesis,.contact{border-color:#ccc}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap navrow">
+    <a class="brand" href="#top"><span class="dot"></span>Vytautas<span style="color:var(--cyan)">.Jocaitis</span></a>
+    <nav class="navlinks">
+      <a href="#sistemos" data-i18n="nav_systems">Sistemos</a>
+      <a href="#gebejimai" data-i18n="nav_caps">Gebėjimai</a>
+      <a href="#ai" data-i18n="nav_ai">AI metodas</a>
+      <a href="#flagmanai" data-i18n="nav_flag">Flagmanai</a>
+    </nav>
+    <div class="navtools">
+      <div class="lang" role="group" aria-label="Language">
+        <button data-lang="lt" class="on">LT</button>
+        <button data-lang="en">EN</button>
+      </div>
+      <a class="btn btn-primary" href="#kontaktai" data-i18n="nav_hire">Samdyti →</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="constellation" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-tag reveal"><b>●</b> <span data-i18n="hero_status">Šiuo metu veikia · atviras naujam vaidmeniui</span></div>
+        <h1 class="hero-h reveal" data-i18n="hero_h">Vienas žmogus. <span class="grad">Dirbtinio intelekto</span> galia. Dešimtys veikiančių sistemų.</h1>
+        <p class="hero-sub reveal" data-i18n="hero_sub">Aš esu <b>vieno žmogaus IT skyrius.</b> Su AI sukuriu ir paleidžiu tai, kam įmonės samdo komandas — nuo kibernetinio saugumo iki gyvų produktų internete.</p>
+        <div class="hero-cta reveal">
+          <a class="btn btn-primary" href="#kontaktai" data-i18n="hero_cta1">Pakalbėkim apie darbą</a>
+          <a class="btn btn-ghost" href="#sistemos" data-i18n="hero_cta2">Žiūrėti sistemas ↓</a>
+        </div>
+        <div class="hero-meta reveal">
+          <span><i></i><span data-i18n="hero_m1">Klaipėda · nuotoliniu būdu</span></span>
+          <span><i style="background:var(--violet)"></i><span data-i18n="hero_m2">IT inžinierius · Sauga · AI</span></span>
+          <span><i style="background:var(--amber)"></i><span data-i18n="hero_m3">Registruota individuali veikla</span></span>
+        </div>
+      </div>
+      <div class="console reveal" aria-hidden="true">
+        <div class="console-bar">
+          <span class="d" style="background:#ff5f56"></span><span class="d" style="background:#ffbd2e"></span><span class="d" style="background:#27c93f"></span>
+          <span style="margin-left:8px">vytautas@stack — systems --status</span>
+        </div>
+        <div class="console-body">
+          <div class="l"><span class="c">$</span> <span class="k">status</span> --all</div>
+          <div class="l"><span class="ok">●</span> pfsense.fw        <span class="c">firewall + ntopng</span> <span class="ok">up</span></div>
+          <div class="l"><span class="ok">●</span> wazuh.siem        <span class="c">6-host homelab</span>   <span class="ok">up</span></div>
+          <div class="l"><span class="ok">●</span> vytautas.it       <span class="c">cloudflare edge</span>  <span class="ok">up</span></div>
+          <div class="l"><span class="ok">●</span> kraken.bot        <span class="c">11 coins · live</span>  <span class="a">24/7</span></div>
+          <div class="l"><span class="ok">●</span> ollama.local      <span class="c">qwen 14B/27B</span>    <span class="v">gpu</span></div>
+          <div class="l"><span class="c">$</span> <span class="k">count</span> systems.shipped <span class="c">→</span> <span class="a">40+</span></div>
+          <div class="l"><span class="c">$</span> <span class="k">whoami</span> <span class="c">→</span> <span class="v">the AI-native operator</span> <span style="opacity:.6">▊</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THESIS -->
+<section class="band" style="padding-top:40px">
+  <div class="wrap">
+    <div class="thesis reveal">
+      <p class="big" data-i18n="th_big">Rinkai reikia ne dar vieno darbuotojo — jai reikia žmogaus, kuris <u>moka valdyti dirbtinį intelektą</u> ir paversti jį veikiančiais produktais. Būtent tai aš darau kiekvieną dieną.</p>
+      <p class="sup" data-i18n="th_sup">Nekuriu pristatymų apie tai, ką „galėčiau". Statau realias sistemas, kurios veikia internete, saugo tinklus, prekiauja realiais pinigais ir jau parduotos klientams. AI yra mano svertas — aš esu architektas.</p>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="band" style="padding-top:0">
+  <div class="wrap">
+    <div class="stats reveal" id="stats"></div>
+  </div>
+</section>
+
+<!-- CAPABILITIES -->
+<section class="band" id="gebejimai">
+  <div class="wrap">
+    <div class="band-head reveal">
+      <div class="eyebrow" data-i18n="cap_eye">// ką aš moku</div>
+      <h2 data-i18n="cap_h">Šeši laukai, kuriuose dirbu kaip visa komanda</h2>
+      <p data-i18n="cap_p">Ne sąrašas raktažodžių, o realiai suvaldytos sritys. Kiekviena pagrįsta paleistomis sistemomis, ne kursais.</p>
+    </div>
+    <div class="caps" id="caps"></div>
+  </div>
+</section>
+
+<hr class="rule" />
+
+<!-- PORTFOLIO -->
+<section class="band" id="sistemos">
+  <div class="wrap">
+    <div class="band-head reveal">
+      <div class="eyebrow" data-i18n="pf_eye">// ką esu sukūręs</div>
+      <h2 data-i18n="pf_h">Sistemos, kurios veikia dabar</h2>
+      <p data-i18n="pf_p">Kiekviena kortelė — realiai veikiantis dalykas: gyvos svetainės, parduotas produktas, 24/7 botai, saugumo infrastruktūra, lokalūs AI serveriai. Filtruok pagal sritį.</p>
+    </div>
+    <div class="filters" id="filters"></div>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<hr class="rule" />
+
+<!-- AI METHOD -->
+<section class="band" id="ai">
+  <div class="wrap ai-wrap">
+    <div class="ai-copy reveal">
+      <div class="eyebrow" style="color:var(--violet)" data-i18n="ai_eye">// mano svertas</div>
+      <h2 data-i18n="ai_h">Aš nevartoju AI kaip žaislo. Aš valdau jį kaip inžinerijos organizaciją.</h2>
+      <p data-i18n="ai_p1"><b>Dauguma žmonių užduoda chatbotui klausimą. Aš pastatau visą konvejerį:</b> atmintis, agentai, lokalūs ir debesų modeliai, kaštų maršrutizavimas ir savi įrankiai. Rezultatas — vienas žmogus dirba komandos greičiu.</p>
+      <p data-i18n="ai_p2">Būtent todėl per kelis mėnesius atsirado dešimtys sistemų. Ne todėl, kad rašau greičiau — todėl, kad AI valdau kaip inžinierius, o ne kaip vartotojas.</p>
+    </div>
+    <div class="stack reveal" id="stack"></div>
+  </div>
+</section>
+
+<hr class="rule" />
+
+<!-- FLAGSHIPS -->
+<section class="band" id="flagmanai">
+  <div class="wrap">
+    <div class="band-head reveal">
+      <div class="eyebrow" data-i18n="fl_eye">// trys geriausi įrodymai</div>
+      <h2 data-i18n="fl_h">Nuo idėjos iki veikiančio, parduodamo produkto</h2>
+      <p data-i18n="fl_p">Trys darbai, kurie geriausiai parodo mastą: verslo klasės infrastruktūra, parduotas komercinis produktas ir gyva viešoji platforma su nuline pasitikėjimo prieiga.</p>
+    </div>
+    <div class="flags" id="flags"></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="band" id="kontaktai">
+  <div class="wrap">
+    <div class="contact reveal">
+      <div class="eyebrow" data-i18n="ct_eye">// pakalbėkim</div>
+      <h2 data-i18n="ct_h">Ieškau rimto vaidmens ir atlygio, atitinkančio tai, ką sukuriu.</h2>
+      <p data-i18n="ct_p">Jei jums reikia žmogaus, kuris su dirbtiniu intelektu paverčia idėjas veikiančiais produktais — nuo saugumo iki web — pradėkim pokalbį.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="mailto:vytautasjkl@gmail.com?subject=Darbo%20pasi%C5%ABlymas" data-i18n="ct_cta1">Rašyti el. laišką</a>
+        <a class="btn btn-ghost" href="https://vytautas.it" target="_blank" rel="noopener" data-i18n="ct_cta2">vytautas.it ↗</a>
+      </div>
+      <div class="lines">
+        <a href="mailto:vytautasjkl@gmail.com"><i>✉</i> vytautasjkl@gmail.com</a>
+        <a href="https://vytautas.it" target="_blank" rel="noopener"><i>🌐</i> vytautas.it</a>
+        <a href="https://github.com/vytautasjkl" target="_blank" rel="noopener"><i>⌥</i> github.com/vytautasjkl</a>
+        <span><i>📍</i> Klaipėda, Lietuva</span>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <span>© 2026 Vytautas Jocaitis</span>
+    <span data-i18n="foot">Sukurta žmogaus, kuris valdo dirbtinį intelektą.</span>
+  </div>
+</footer>
+
+<script>
+/* ---------------- DATA ---------------- */
+var DOMAINS = [
+  {id:"all",   c:"var(--ink)",    lt:"Viskas",         en:"All"},
+  {id:"sec",   c:"var(--red)",    lt:"Sauga & NIS2",   en:"Security & NIS2"},
+  {id:"infra", c:"var(--cyan)",   lt:"Infrastruktūra", en:"Infrastructure"},
+  {id:"web",   c:"var(--blue)",   lt:"Web produktai",  en:"Web products"},
+  {id:"ai",    c:"var(--violet)", lt:"Lokalus AI",     en:"Local AI"},
+  {id:"auto",  c:"var(--amber)",  lt:"Automatika",     en:"Automation"},
+  {id:"data",  c:"var(--green)",  lt:"Duomenys",       en:"Data & recovery"}
+];
+var DC = {sec:"var(--red)", infra:"var(--cyan)", web:"var(--blue)", ai:"var(--violet)", auto:"var(--amber)", data:"var(--green)"};
+var STATUS = {
+  LIVE:{c:"var(--green)", lt:"GYVA",     en:"LIVE"},
+  SOLD:{c:"var(--amber)", lt:"PARDUOTA", en:"SOLD"},
+  ALL:{c:"var(--cyan)",   lt:"24/7",     en:"24/7"},
+  CORE:{c:"var(--blue)",  lt:"BRANDUOLYS",en:"CORE"},
+  TOOL:{c:"var(--violet)",lt:"ĮRANKIS",  en:"TOOL"}
+};
+
+var SYSTEMS = [
+  {n:"Production homelab (6 hosts)", d:"sec", s:"LIVE", tech:"Proxmox · Wazuh · Authelia",
+   lt:"6 hostų gamybinis homelab'as: Proxmox virtualizacija, Wazuh SIEM, Nextcloud, osTicket, Caddy+Authelia SSO vartai ir NIS2 įrodymų generatorius. Pilnas atkūrimas iš vieno USB.",
+   en:"6-host production homelab: Proxmox, Wazuh SIEM, Nextcloud, osTicket, Caddy+Authelia SSO gateway and a NIS2 evidence generator. Full disaster-recovery from one USB stick."},
+  {n:"NIS2 / KSĮ atitiktis", d:"sec", s:"LIVE", tech:"SIEM · vCISO · dokumentai",
+   lt:"Kibernetinio saugumo atitiktis kaip paslauga: pardavimų playbook'as, 3 pakopų kainodara ir vykdymo įrankiai — SIEM, incidentų valdymas, 10 LT dokumentų ir įrodymų generatorius.",
+   en:"Cybersecurity compliance as a service: sales playbook, 3-tier pricing and a delivery toolkit — SIEM, incident response, 10 LT documents and an evidence generator."},
+  {n:"Klientų atsisiuntimų portalas", d:"sec", s:"LIVE", tech:"Cloudflare Access · nginx · OTP",
+   lt:"Kiekvienam pirkėjui — savas subdomenas su izoliuotu folderiu ir vienkartinio PIN prieiga. 2.5 GB failai atsisiunčia patikimai. Nulinio pasitikėjimo architektūra.",
+   en:"Every buyer gets an isolated subdomain with their own folder and one-time-PIN access. 2.5 GB files download reliably. A zero-trust architecture."},
+  {n:"analyze-exe", d:"sec", s:"TOOL", tech:"radare2 · capa · LLM",
+   lt:"Statinis Windows binarų / kenkėjiškų programų analizatorius: ištraukia importus, capa gebėjimus ir strings, tada lokalus necenzūruotas modelis paaiškina ką daro ir pateikia verdiktą.",
+   en:"Static Windows binary / malware analyzer: extracts imports, capa capabilities and strings, then a local uncensored model explains what it does and gives a verdict."},
+  {n:"pass slaptažodžių saugykla", d:"sec", s:"LIVE", tech:"GPG · pass · CLI",
+   lt:"Centralizuota, 100% lokali GPG-šifruota slaptažodžių saugykla, iš kurios skriptai saugiai ima API raktus — niekada atviro teksto .env failuose.",
+   en:"A centralized, fully local GPG-encrypted secrets store that scripts pull API keys from — never plaintext in .env files."},
+
+  {n:"pfSense tinklas + ntopng", d:"infra", s:"CORE", tech:"pfSense · VLAN · ntopng",
+   lt:"Namų / biuro branduolio ugniasienė ant Intel N100: keli VLAN'ai, NAT persiuntimai, ntopng srauto stebėjimas ir reguliarūs saugumo auditai.",
+   en:"Core edge firewall on an Intel N100: multiple VLANs, NAT forwards, ntopng traffic monitoring and regular security audits."},
+  {n:"QNAP NAS + QuMagie", d:"infra", s:"CORE", tech:"QTS · SMB · Docker",
+   lt:"1.4 TB centrinė saugykla su bendrinimais, nuotraukų platforma QuMagie ir Docker konteineriais, aptarnaujančiais gyvas svetaines.",
+   en:"1.4 TB central storage with shares, the QuMagie photo platform and Docker containers serving live sites."},
+  {n:"Proxmox virtualizacija", d:"infra", s:"CORE", tech:"Proxmox VE · LXC · KVM",
+   lt:"Atskiras virtualizacijos hostas VM'ams ir konteineriams — papildoma skaičiavimo ir saugyklos galia dideliems darbams.",
+   en:"A dedicated virtualization host for VMs and containers — spare compute and storage for heavy jobs."},
+  {n:"Cloudflare Zero-Trust prieiga", d:"infra", s:"LIVE", tech:"Tunnel · Access · OTP",
+   lt:"Keli Cloudflare tuneliai + Access, atveriantys vidines paslaugas (QuMagie, nuotolinį AI, klientų portalus) su vienkartinio PIN autentifikacija, be atvirų portų.",
+   en:"Several Cloudflare tunnels + Access exposing internal services (QuMagie, remote AI, client portals) with one-time-PIN auth and no open ports."},
+  {n:"Automatinis atsarginis kopijavimas", d:"infra", s:"ALL", tech:"rsync · cron · vzdump",
+   lt:"Naktinis rsync į NAS + pilni homelab'o momentiniai vaizdai į USB su patikrintu atkūrimu. Rotacija ir vientisumo tikrinimas įskaičiuoti.",
+   en:"Nightly rsync to the NAS + full homelab snapshots to USB with verified restore. Rotation and integrity checks included."},
+  {n:"dotfiles", d:"infra", s:"TOOL", tech:"git · zellij · bash",
+   lt:"Privatus, atkuriamas terminalo ir darbo aplinkos konfigūracijos repo — vienu skriptu paruošiama nauja mašina.",
+   en:"A private, reproducible terminal & workspace config repo — one script provisions a fresh machine."},
+
+  {n:"vytautas.it", d:"web", s:"LIVE", tech:"React · Vite · Cloudflare",
+   lt:"Gyvas paslaugų ir portfolio tinklalapis ant Cloudflare krašto tinklo, su atskiru NIS2 atitikties puslapiu. Diegiama per wrangler.",
+   en:"A live services & portfolio site on the Cloudflare edge, with a dedicated NIS2 compliance landing page. Deployed via wrangler."},
+  {n:"Gražjūrio baidarės", d:"web", s:"LIVE", tech:"PHP CMS · Docker · Cloudflare",
+   lt:"Realaus verslo svetainė, perdaryta iš WordPress į lengvą savos gamybos PHP CMS. Klientė turinį redaguoja gyvai. Talpinama ant NAS per tunelį.",
+   en:"A real client's site, rebuilt from WordPress into a lightweight custom PHP CMS. The client edits content live. Hosted on the NAS via a tunnel."},
+  {n:"Spinta", d:"web", s:"TOOL", tech:"React · Express · SQLite",
+   lt:"Virtualios drabužinės socialinė platforma — pilnas stack'as su vartotojais, įkėlimais ir kanalu.",
+   en:"A virtual-wardrobe social platform — a full stack with users, uploads and a feed."},
+  {n:"Vision Web", d:"web", s:"TOOL", tech:"React · Vite · offline",
+   lt:"Offline uosto ERP (Equinox Vision 5) klonas: tas pats UI ir skaičiavimai, bet nesijungia prie nieko — saugus mokymuisi ir demonstracijoms.",
+   en:"An offline clone of a port ERP (Equinox Vision 5): same UI and calculations but connected to nothing — safe for training and demos."},
+
+  {n:"Traffic Counter", d:"ai", s:"SOLD", tech:"YOLO11 · OCR · PyInstaller",
+   lt:"Komercinė kompiuterinės regos programa, skaičiuojanti transporto srautą iš kamerų (YOLO11), su laikrodžio OCR ir modelio auto-derinimu. Parduota pirmam klientui už 3000 €.",
+   en:"A commercial computer-vision app that counts vehicle traffic from cameras (YOLO11), with clock OCR and model auto-tuning. Sold to the first client for €3,000."},
+  {n:"vietinis-ai", d:"ai", s:"LIVE", tech:"Ollama · qwen · web UI",
+   lt:"Lokalus, visiškai offline AI pokalbių serveris ant GPU (Ollama + qwen). Niekur nesiunčia duomenų — privatus asistentas.",
+   en:"A local, fully offline AI chat server on the GPU (Ollama + qwen). Sends data nowhere — a private assistant."},
+  {n:"pdf-ai", d:"ai", s:"LIVE", tech:"Ollama · PyMuPDF · OCR",
+   lt:"Lokalus necenzūruotas AI + pilnas PDF įrankių rinkinys: OCR, konvertavimas, redagavimas, formų pildymas — komandos paprasta kalba paverčiamos realiais veiksmais.",
+   en:"A local uncensored AI + a full PDF toolkit: OCR, conversion, editing, form-filling — plain-language commands turned into real operations."},
+  {n:"zeus AI serveris", d:"ai", s:"LIVE", tech:"RTX 3060 · Ollama · SSH tunnel",
+   lt:"Windows GPU mašina su necenzūruotu Ollama (14B + 27B abliteruoti modeliai), pasiekiama nuotoliniu būdu per SSH tunelį ir Open WebUI.",
+   en:"A Windows GPU box running uncensored Ollama (14B + 27B abliterated models), reachable remotely via an SSH tunnel and Open WebUI."},
+  {n:"DeepSeek maršrutizatorius", d:"ai", s:"LIVE", tech:"CLI · API · kaštų optimizacija",
+   lt:"CLI ir web agentas, nukreipiantys pigias smulkias užduotis į DeepSeek API, kad brangūs modeliai būtų taupomi — kaštų optimizacija automatiškai.",
+   en:"A CLI and web agent that route cheap subtasks to the DeepSeek API to conserve premium models — automatic cost optimization."},
+  {n:"CloudCLI nuotolinė AI aplinka", d:"ai", s:"LIVE", tech:"claudecodeui · tunnel · Access",
+   lt:"Pilna AI kodavimo aplinka, pasiekiama iš bet kur per naršyklę — Cloudflare tunelis + Access, savi plugin'ai (atminties grafas, tinklo žemėlapis).",
+   en:"A full AI coding environment reachable from anywhere in the browser — Cloudflare tunnel + Access, with custom plugins (memory graph, network map)."},
+  {n:"Basic Memory (MCP)", d:"ai", s:"LIVE", tech:"MCP · knowledge-graph · Obsidian",
+   lt:"Žinių grafo atmintis kaip MCP serveris: AI įsimena kontekstą tarp sesijų, naršoma kaip grafas Obsidian'e ir naršyklėje.",
+   en:"A knowledge-graph memory as an MCP server: the AI remembers context across sessions, browsable as a graph in Obsidian and the browser."},
+
+  {n:"Kraken rebalansavimo botas", d:"auto", s:"ALL", tech:"Python · Kraken API · systemd",
+   lt:"Gyvas, tikrų pinigų kriptovaliutų portfelio rebalansavimo botas (11 monetų, VWAP) su visada matoma valdymo lentele ir kritimo įspėjimais. Veikia 24/7.",
+   en:"A live, real-money crypto portfolio rebalancing bot (11 coins, VWAP) with an always-on dashboard and dip alerts. Runs 24/7."},
+  {n:"tg-fb konvejeris", d:"auto", s:"TOOL", tech:"Telethon · DeepL · FastAPI",
+   lt:"Automatinis srautas: Telegram įrašai → DeepL vertimas į LT → web peržiūra ir redagavimas → skelbimas Facebook puslapyje.",
+   en:"An automated pipeline: Telegram posts → DeepL translation to LT → web review and editing → publishing to a Facebook page."},
+  {n:"mapas", d:"auto", s:"TOOL", tech:"SVG · generatorius · skill",
+   lt:"Iš atminties failų generuoja vieną neoninę visos infrastruktūros topologijos diagramą — draw.io stiliaus tinklo žemėlapis su pan/zoom. Yra ir kaip AI komanda.",
+   en:"Generates a single neon topology diagram of the whole infrastructure from memory files — a draw.io-style network map with pan/zoom. Also available as an AI command."},
+  {n:"diskas", d:"auto", s:"TOOL", tech:"bash · ANSI · df/du",
+   lt:"Terminalo disko vietos skydelis su neoniniais blokiniais grafikais — iškart matai kas užima vietą.",
+   en:"A terminal disk-space dashboard with neon block bars — instantly see what's eating space."},
+  {n:"Būsto planuoklis", d:"auto", s:"TOOL", tech:"HTML · canvas · offline",
+   lt:"Vieno failo, offline būsto pirkimo planuoklis: taupymo trukmė, skolinimosi galia, paskolos amortizacija ir nuoma vs pirkimas — su canvas grafikais.",
+   en:"A single-file, offline home-buying planner: savings timeline, borrowing power, loan amortization and rent-vs-buy — with canvas charts."},
+  {n:"skelbiu skreiperis", d:"auto", s:"TOOL", tech:"CDP · Node · headless",
+   lt:"NT skelbimų rinkimas pro Cloudflare apsaugą, valdant tikrą naršyklę per CDP — realus IP praeina patikras automatiškai.",
+   en:"Scrapes real-estate listings past Cloudflare protection by driving a real browser over CDP — a real IP passes the checks automatically."},
+
+  {n:"HDD nuotraukų atkūrimas", d:"data", s:"TOOL", tech:"ddrescue · PhotoRec · exiftool",
+   lt:"Asmeninių nuotraukų atkūrimas iš fiziškai mirštančio 2 TB NAS disko: saugus ddrescue atvaizdas, tada PhotoRec — jokių rašymų į originalą.",
+   en:"Recovering personal photos from a physically failing 2 TB NAS drive: a safe ddrescue image first, then PhotoRec — never writing to the original."}
+];
+
+var CAPS = [
+  {id:"sec", lt:{h:"Kibernetinis saugumas & NIS2", p:"SIEM, ugniasienės, nulinio pasitikėjimo prieiga, incidentų valdymas ir NIS2/KSĮ atitiktis — nuo audito iki gyvo diegimo.",
+    t:["Wazuh SIEM","pfSense","Cloudflare Access","Authelia SSO","malware analizė","atitikties dokumentai"]},
+   en:{h:"Cybersecurity & NIS2", p:"SIEM, firewalls, zero-trust access, incident response and NIS2 compliance — from audit to live rollout.",
+    t:["Wazuh SIEM","pfSense","Cloudflare Access","Authelia SSO","malware analysis","compliance docs"]}},
+  {id:"infra", lt:{h:"Infrastruktūra & Homelab", p:"Virtualizacija, tinklai, konteineriai, saugyklos ir atkūrimas. Statau ir prižiūriu daugiahostę gamybinę aplinką vienas.",
+    t:["Proxmox","Docker","QNAP","VLAN","Cloudflare Tunnel","backup/restore"]},
+   en:{h:"Infrastructure & Homelab", p:"Virtualization, networking, containers, storage and recovery. I build and run a multi-host production environment solo.",
+    t:["Proxmox","Docker","QNAP","VLAN","Cloudflare Tunnel","backup/restore"]}},
+  {id:"web", lt:{h:"Web produktai", p:"Nuo modernaus React front-endo iki lengvų savos gamybos CMS. Diegiu į krašto tinklą ir prijungiu domenus.",
+    t:["React","Vite","Tailwind","PHP","Express","Cloudflare Workers"]},
+   en:{h:"Web products", p:"From modern React front-ends to lightweight custom CMSs. I ship to the edge and wire up domains.",
+    t:["React","Vite","Tailwind","PHP","Express","Cloudflare Workers"]}},
+  {id:"ai", lt:{h:"Lokalus & taikomasis AI", p:"Savo GPU serveriai su atviro kodo modeliais, kompiuterinė regа, MCP atmintis ir agentai — privatu ir be prenumeratų.",
+    t:["Ollama","YOLO11","MCP","abliterate modeliai","OCR","RAG"]},
+   en:{h:"Local & applied AI", p:"Self-hosted GPU servers with open models, computer vision, MCP memory and agents — private and subscription-free.",
+    t:["Ollama","YOLO11","MCP","abliterated models","OCR","RAG"]}},
+  {id:"auto", lt:{h:"Automatika & botai", p:"24/7 procesai, kurie patys dirba: prekybos botai, turinio konvejeriai, stebėjimo ir generavimo įrankiai.",
+    t:["Python","systemd","cron","API integracijos","Telethon","CDP"]},
+   en:{h:"Automation & bots", p:"24/7 processes that work on their own: trading bots, content pipelines, monitoring and generation tools.",
+    t:["Python","systemd","cron","API integrations","Telethon","CDP"]}},
+  {id:"data", lt:{h:"Duomenys & atkūrimas", p:"Duomenų gelbėjimas iš mirštančios geležies, migravimas, scrape'inimas ir tvarkymas — atsargiai ir metodiškai.",
+    t:["ddrescue","PhotoRec","rsync","SQL dumps","exiftool","ETL"]},
+   en:{h:"Data & recovery", p:"Rescuing data from dying hardware, migrations, scraping and wrangling — carefully and methodically.",
+    t:["ddrescue","PhotoRec","rsync","SQL dumps","exiftool","ETL"]}}
+];
+
+var STATS = [
+  {n:"40", u:"+", lt:"sukurtos sistemos", en:"systems shipped"},
+  {n:"6", u:"", lt:"hostų homelab'as", en:"host homelab"},
+  {n:"5", u:"+", lt:"gyvos paslaugos internete", en:"live internet services"},
+  {n:"3000", u:"€", lt:"pirmas parduotas produktas", en:"first product sold"},
+  {n:"11", u:"", lt:"monetų botas, tikri pinigai", en:"coin bot, real money"},
+  {n:"3", u:"", lt:"savi AI modeliai ant GPU", en:"self-hosted AI models"}
+];
+
+var STACK = [
+  {tag:"BUILD", lt:{h:"Claude Code + CloudCLI", s:"Pagrindinė kūrimo aplinka — terminale ir per naršyklę iš bet kur."},
+   en:{h:"Claude Code + CloudCLI", s:"Primary build environment — in the terminal and via browser from anywhere."}},
+  {tag:"LOCAL", lt:{h:"Ollama · qwen 14B/27B", s:"Savi GPU modeliai (net abliteruoti) privatiems ir necenzūruotiems darbams."},
+   en:{h:"Ollama · qwen 14B/27B", s:"Self-hosted GPU models (even abliterated) for private, uncensored work."}},
+  {tag:"COST", lt:{h:"DeepSeek maršrutizavimas", s:"Pigios užduotys nukreipiamos automatiškai — brangūs modeliai taupomi."},
+   en:{h:"DeepSeek routing", s:"Cheap subtasks routed automatically — premium models conserved."}},
+  {tag:"MEMORY", lt:{h:"MCP žinių grafas", s:"Kontekstas išlieka tarp sesijų — AI mena visą mano infrastruktūrą."},
+   en:{h:"MCP knowledge graph", s:"Context persists across sessions — the AI remembers my whole stack."}},
+  {tag:"AGENTS", lt:{h:"Savi skills & plugin'ai", s:"Daugiaagentiniai darbo srautai ir įrankiai, pritaikyti mano procesui."},
+   en:{h:"Custom skills & plugins", s:"Multi-agent workflows and tools tailored to my process."}}
+];
+
+var FLAGS = [
+  {idx:"01", d:"sec",
+   lt:{h:"Verslo klasės homelab'as, kurį valdo vienas žmogus", p:"Šešių hostų aplinka su Wazuh SIEM, Nextcloud, osTicket pagalbos tarnyba ir Authelia SSO vartais — visa už Cloudflare nulinio pasitikėjimo prieigos. NIS2 įrodymai generuojami automatiškai, o visą stack'ą galima atkurti iš vieno USB.",
+      m:["Proxmox","Wazuh SIEM","Nextcloud","osTicket","Authelia SSO","NIS2 evidence"], kn:"6", kl:"hostai · 1 žmogus"},
+   en:{h:"An enterprise-grade homelab run by one person", p:"A six-host environment with Wazuh SIEM, Nextcloud, an osTicket help desk and an Authelia SSO gateway — all behind Cloudflare zero-trust access. NIS2 evidence is generated automatically, and the whole stack restores from a single USB stick.",
+      m:["Proxmox","Wazuh SIEM","Nextcloud","osTicket","Authelia SSO","NIS2 evidence"], kn:"6", kl:"hosts · 1 person"}},
+  {idx:"02", d:"ai",
+   lt:{h:"Parduotas komercinis kompiuterinės regos produktas", p:"Traffic Counter skaičiuoja transporto srautą iš kamerų su YOLO11, sprendžia naktinio apšvietimo ir kamerų laikrodžio OCR problemas, pats parenka modelį. Supakuotas kaip Windows programa, parduotas pirmam klientui — su registruota individualia veikla.",
+      m:["YOLO11","OCR","auto-tune","Windows .exe","individuali veikla"], kn:"3000€", kl:"pirmas klientas"},
+   en:{h:"A shipped, sold computer-vision product", p:"Traffic Counter counts vehicle traffic from cameras with YOLO11, solves low-light and camera-clock OCR problems and auto-selects the model. Packaged as a Windows app and sold to the first client — with a registered business behind it.",
+      m:["YOLO11","OCR","auto-tune","Windows .exe","registered business"], kn:"€3000", kl:"first client"}},
+  {idx:"03", d:"web",
+   lt:{h:"Gyvos svetainės su nulinio pasitikėjimo prieiga", p:"vytautas.it ant Cloudflare krašto, kliento verslo svetainė savame PHP CMS ir izoliuoti klientų atsisiuntimų portalai — visi pasiekiami per Cloudflare tunelius su vienkartinio PIN autentifikacija, be jokių atvirų portų į namų tinklą.",
+      m:["React","PHP CMS","Cloudflare","Tunnel + Access","OTP"], kn:"100%", kl:"be atvirų portų"},
+   en:{h:"Live sites with zero-trust access", p:"vytautas.it on the Cloudflare edge, a client's business site on a custom PHP CMS, and isolated per-client download portals — all reachable through Cloudflare tunnels with one-time-PIN auth and zero open ports into the home network.",
+      m:["React","PHP CMS","Cloudflare","Tunnel + Access","OTP"], kn:"100%", kl:"no open ports"}}
+];
+
+var I18N = {
+  lt:{
+    nav_systems:"Sistemos", nav_caps:"Gebėjimai", nav_ai:"AI metodas", nav_flag:"Flagmanai", nav_hire:"Samdyti →",
+    hero_status:"Šiuo metu veikia · atviras naujam vaidmeniui",
+    hero_sub:"Aš esu <b>vieno žmogaus IT skyrius.</b> Su AI sukuriu ir paleidžiu tai, kam įmonės samdo komandas — nuo kibernetinio saugumo iki gyvų produktų internete.",
+    hero_cta1:"Pakalbėkim apie darbą", hero_cta2:"Žiūrėti sistemas ↓",
+    hero_m1:"Klaipėda · nuotoliniu būdu", hero_m2:"IT inžinierius · Sauga · AI", hero_m3:"Registruota individuali veikla",
+    th_sup:"Nekuriu pristatymų apie tai, ką „galėčiau“. Statau realias sistemas, kurios veikia internete, saugo tinklus, prekiauja realiais pinigais ir jau parduotos klientams. AI yra mano svertas — aš esu architektas.",
+    cap_eye:"// ką aš moku", cap_h:"Šeši laukai, kuriuose dirbu kaip visa komanda",
+    cap_p:"Ne sąrašas raktažodžių, o realiai suvaldytos sritys. Kiekviena pagrįsta paleistomis sistemomis, ne kursais.",
+    pf_eye:"// ką esu sukūręs", pf_h:"Sistemos, kurios veikia dabar",
+    pf_p:"Kiekviena kortelė — realiai veikiantis dalykas: gyvos svetainės, parduotas produktas, 24/7 botai, saugumo infrastruktūra, lokalūs AI serveriai. Filtruok pagal sritį.",
+    ai_eye:"// mano svertas", ai_h:"Aš nevartoju AI kaip žaislo. Aš valdau jį kaip inžinerijos organizaciją.",
+    ai_p1:"<b>Dauguma žmonių užduoda chatbotui klausimą. Aš pastatau visą konvejerį:</b> atmintis, agentai, lokalūs ir debesų modeliai, kaštų maršrutizavimas ir savi įrankiai. Rezultatas — vienas žmogus dirba komandos greičiu.",
+    ai_p2:"Būtent todėl per kelis mėnesius atsirado dešimtys sistemų. Ne todėl, kad rašau greičiau — todėl, kad AI valdau kaip inžinierius, o ne kaip vartotojas.",
+    fl_eye:"// trys geriausi įrodymai", fl_h:"Nuo idėjos iki veikiančio, parduodamo produkto",
+    fl_p:"Trys darbai, kurie geriausiai parodo mastą: verslo klasės infrastruktūra, parduotas komercinis produktas ir gyva viešoji platforma su nuline pasitikėjimo prieiga.",
+    ct_eye:"// pakalbėkim", ct_h:"Ieškau rimto vaidmens ir atlygio, atitinkančio tai, ką sukuriu.",
+    ct_p:"Jei jums reikia žmogaus, kuris su dirbtiniu intelektu paverčia idėjas veikiančiais produktais — nuo saugumo iki web — pradėkim pokalbį.",
+    ct_cta1:"Rašyti el. laišką", ct_cta2:"vytautas.it ↗",
+    foot:"Sukurta žmogaus, kuris valdo dirbtinį intelektą."
+  },
+  en:{
+    nav_systems:"Systems", nav_caps:"Capabilities", nav_ai:"AI method", nav_flag:"Flagships", nav_hire:"Hire me →",
+    hero_status:"Currently running · open to a new role",
+    hero_sub:"I'm a <b>one-person IT department.</b> With AI I build and ship what companies hire whole teams for — from cybersecurity to live products on the internet.",
+    hero_cta1:"Let's talk about work", hero_cta2:"See the systems ↓",
+    hero_m1:"Klaipėda · remote", hero_m2:"IT engineer · Security · AI", hero_m3:"Registered sole trader",
+    th_sup:"I don't build slides about what I “could” do. I build real systems that run on the internet, protect networks, trade real money and are already sold to clients. AI is my leverage — I'm the architect.",
+    cap_eye:"// what I do", cap_h:"Six fields where I operate like a whole team",
+    cap_p:"Not a list of keywords, but domains I actually run. Each one is backed by shipped systems, not courses.",
+    pf_eye:"// what I've built", pf_h:"Systems that are running right now",
+    pf_p:"Every card is a real, running thing: live sites, a sold product, 24/7 bots, security infrastructure, local AI servers. Filter by field.",
+    ai_eye:"// my leverage", ai_h:"I don't use AI as a toy. I run it like an engineering organization.",
+    ai_p1:"<b>Most people ask a chatbot a question. I build the whole pipeline:</b> memory, agents, local and cloud models, cost routing and custom tools. The result — one person working at a team's pace.",
+    ai_p2:"That's why dozens of systems appeared in a few months. Not because I type faster — because I direct AI like an engineer, not a user.",
+    fl_eye:"// three best proofs", fl_h:"From an idea to a working, sold product",
+    fl_p:"Three builds that show the scale best: enterprise-grade infrastructure, a sold commercial product and a live public platform with zero-trust access.",
+    ct_eye:"// let's talk", ct_h:"I'm looking for a serious role — and pay that matches what I build.",
+    ct_p:"If you need someone who turns ideas into working products with AI — from security to web — let's start a conversation.",
+    ct_cta1:"Send an email", ct_cta2:"vytautas.it ↗",
+    foot:"Built by a human who directs artificial intelligence."
+  }
+};
+
+var HERO_H = {
+  lt:[{t:"Vienas žmogus. "},{t:"Dirbtinio intelekto",g:1},{t:" galia. Dešimtys veikiančių sistemų."}],
+  en:[{t:"One operator. "},{t:"AI",g:1},{t:" as leverage. Dozens of systems that actually run."}]
+};
+var TH_BIG = {
+  lt:[{t:"Rinkai reikia ne dar vieno darbuotojo — jai reikia žmogaus, kuris "},{t:"moka valdyti dirbtinį intelektą",u:1},{t:" ir paversti jį veikiančiais produktais. Būtent tai aš darau kiekvieną dieną."}],
+  en:[{t:"The market doesn't need another employee — it needs someone who "},{t:"knows how to direct AI",u:1},{t:" and turn it into working products. That's exactly what I do every day."}]
+};
+
+/* ---------------- RENDER ---------------- */
+var lang = "lt";
+var activeFilter = "all";
+
+function el(tag, cls, txt){ var e=document.createElement(tag); if(cls) e.className=cls; if(txt!=null) e.textContent=txt; return e; }
+
+function renderRich(container, parts){
+  container.textContent="";
+  parts.forEach(function(p){
+    if(p.g){ var s=el("span","grad",p.t); container.appendChild(s); }
+    else if(p.u){ var u=el("u",null,p.t); container.appendChild(u); }
+    else container.appendChild(document.createTextNode(p.t));
+  });
+}
+
+function renderStats(){
+  var c=document.getElementById("stats"); c.textContent="";
+  STATS.forEach(function(s){
+    var d=el("div","stat");
+    var n=el("div","n"); n.appendChild(document.createTextNode(s.n));
+    if(s.u){ var u=el("span","u",s.u); n.appendChild(u); }
+    d.appendChild(n);
+    d.appendChild(el("div","l",s[lang]));
+    c.appendChild(d);
+  });
+}
+
+function renderCaps(){
+  var c=document.getElementById("caps"); c.textContent="";
+  CAPS.forEach(function(cap){
+    var box=el("div","cap");
+    var ic=el("span","ic"); ic.textContent=cap.id.toUpperCase();
+    ic.style.color=DC[cap.id]; ic.style.background="color-mix(in srgb,"+DC[cap.id]+" 14%, transparent)";
+    box.appendChild(ic);
+    box.appendChild(el("h3",null,cap[lang].h));
+    box.appendChild(el("p",null,cap[lang].p));
+    var ul=el("ul");
+    cap[lang].t.forEach(function(t){ ul.appendChild(el("li",null,t)); });
+    box.appendChild(ul);
+    c.appendChild(box);
+  });
+}
+
+function renderFilters(){
+  var c=document.getElementById("filters"); c.textContent="";
+  DOMAINS.forEach(function(d){
+    var b=el("button","chip"+(d.id===activeFilter?" on":""));
+    b.textContent=d[lang];
+    if(d.id===activeFilter && d.id!=="all"){ b.style.background=d.c; }
+    else if(d.id===activeFilter){ b.style.background="linear-gradient(96deg,var(--cyan),var(--violet))"; }
+    b.addEventListener("click",function(){ activeFilter=d.id; renderFilters(); renderGrid(); });
+    c.appendChild(b);
+  });
+}
+
+function renderGrid(){
+  var c=document.getElementById("grid"); c.textContent="";
+  var list=SYSTEMS.filter(function(s){ return activeFilter==="all"||s.d===activeFilter; });
+  if(!list.length){ c.appendChild(el("div","empty","—")); return; }
+  list.forEach(function(s){
+    var card=el("div","card"); card.style.setProperty("--dc",DC[s.d]);
+    var top=el("div","top");
+    var dom=DOMAINS.filter(function(x){return x.id===s.d;})[0];
+    top.appendChild(el("span","dom",dom[lang]));
+    var st=el("span","st"); st.textContent=STATUS[s.s][lang];
+    st.style.color=STATUS[s.s].c; st.style.background="color-mix(in srgb,"+STATUS[s.s].c+" 15%, transparent)";
+    top.appendChild(st);
+    card.appendChild(top);
+    card.appendChild(el("h3",null,s.n));
+    card.appendChild(el("p",null,s[lang]));
+    var foot=el("div","foot");
+    foot.appendChild(el("span","tech",s.tech));
+    card.appendChild(foot);
+    c.appendChild(card);
+  });
+  observeReveal();
+}
+
+function renderStack(){
+  var c=document.getElementById("stack"); c.textContent="";
+  STACK.forEach(function(s){
+    var row=el("div","srow");
+    row.appendChild(el("span","tag",s.tag));
+    var box=el("div");
+    box.appendChild(el("h4",null,s[lang].h));
+    box.appendChild(el("span",null,s[lang].s));
+    row.appendChild(box);
+    c.appendChild(row);
+  });
+}
+
+function renderFlags(){
+  var c=document.getElementById("flags"); c.textContent="";
+  FLAGS.forEach(function(f){
+    var row=el("div","flag"); row.style.setProperty("--dc",DC[f.d]);
+    row.appendChild(el("div","idx",f.idx));
+    var body=el("div");
+    body.appendChild(el("h3",null,f[lang].h));
+    body.appendChild(el("p",null,f[lang].p));
+    var meta=el("div","meta");
+    f[lang].m.forEach(function(m){ meta.appendChild(el("b",null,m)); });
+    body.appendChild(meta);
+    row.appendChild(body);
+    var kpi=el("div","kpi");
+    var kn=el("span","kn",f[lang].kn); kn.style.color=DC[f.d];
+    kpi.appendChild(kn);
+    kpi.appendChild(el("span","kl",f[lang].kl));
+    row.appendChild(kpi);
+    c.appendChild(row);
+  });
+}
+
+function applyI18N(){
+  var dict=I18N[lang];
+  document.querySelectorAll("[data-i18n]").forEach(function(node){
+    var key=node.getAttribute("data-i18n");
+    var val=dict[key];
+    if(val==null) return;
+    if(val.indexOf("<b>")>=0){
+      // render bold spans safely via DOM text nodes
+      node.textContent="";
+      val.split(/<\/?b>/).forEach(function(chunk,i){
+        if(!chunk) return;
+        if(i%2===1) node.appendChild(el("b",null,chunk));
+        else node.appendChild(document.createTextNode(chunk));
+      });
+    } else {
+      node.textContent=val;
+    }
+  });
+  renderRich(document.querySelector(".hero-h"), HERO_H[lang]);
+  renderRich(document.querySelector(".thesis .big"), TH_BIG[lang]);
+}
+
+function setLang(l){
+  lang=l; document.documentElement.lang=l;
+  document.querySelectorAll(".lang button").forEach(function(b){
+    b.classList.toggle("on", b.getAttribute("data-lang")===l);
+  });
+  applyI18N(); renderStats(); renderCaps(); renderFilters(); renderGrid(); renderStack(); renderFlags();
+}
+
+document.querySelectorAll(".lang button").forEach(function(b){
+  b.addEventListener("click",function(){ setLang(b.getAttribute("data-lang")); });
+});
+
+/* ---------------- REVEAL ---------------- */
+var io=null;
+function observeReveal(){
+  if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+    document.querySelectorAll(".reveal").forEach(function(n){n.classList.add("in");}); return;
+  }
+  if(!io){
+    io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+    },{threshold:0.12});
+  }
+  document.querySelectorAll(".reveal:not(.in)").forEach(function(n){ io.observe(n); });
+}
+
+/* ---------------- CONSTELLATION ---------------- */
+(function(){
+  var canvas=document.getElementById("constellation");
+  if(!canvas) return;
+  var ctx=canvas.getContext("2d");
+  var reduce=window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var W,H,DPR,nodes=[],raf=null,mx=-9999,my=-9999;
+  var COLORS=["#2FE4D0","#8B7CFF","#7FB2FF","#45E39A"];
+
+  function size(){
+    var r=canvas.getBoundingClientRect();
+    DPR=Math.min(window.devicePixelRatio||1,2);
+    W=r.width; H=r.height;
+    canvas.width=W*DPR; canvas.height=H*DPR;
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+  function build(){
+    nodes=[];
+    var count=Math.min(46, Math.max(24, Math.round(W*H/26000)));
+    for(var i=0;i<count;i++){
+      nodes.push({
+        x:Math.random()*W, y:Math.random()*H,
+        vx:(Math.random()-.5)*0.16, vy:(Math.random()-.5)*0.16,
+        r:Math.random()*1.6+1.1,
+        c:COLORS[i%COLORS.length],
+        hub:Math.random()<0.16
+      });
+    }
+  }
+  function step(){
+    ctx.clearRect(0,0,W,H);
+    for(var i=0;i<nodes.length;i++){
+      var n=nodes[i];
+      n.x+=n.vx; n.y+=n.vy;
+      if(n.x<0||n.x>W) n.vx*=-1;
+      if(n.y<0||n.y>H) n.vy*=-1;
+      // mouse parallax nudge
+      var dxm=n.x-mx, dym=n.y-my, dm=dxm*dxm+dym*dym;
+      if(dm<14000){ var f=(14000-dm)/14000*0.02; n.x+=dxm*f*0.1; n.y+=dym*f*0.1; }
+    }
+    // links
+    for(var a=0;a<nodes.length;a++){
+      for(var b=a+1;b<nodes.length;b++){
+        var dx=nodes[a].x-nodes[b].x, dy=nodes[a].y-nodes[b].y;
+        var d=Math.sqrt(dx*dx+dy*dy);
+        if(d<128){
+          var o=(1-d/128)*0.5;
+          ctx.strokeStyle="rgba(120,150,200,"+o.toFixed(3)+")";
+          ctx.lineWidth=0.6;
+          ctx.beginPath(); ctx.moveTo(nodes[a].x,nodes[a].y); ctx.lineTo(nodes[b].x,nodes[b].y); ctx.stroke();
+        }
+      }
+    }
+    // nodes
+    for(var k=0;k<nodes.length;k++){
+      var m=nodes[k];
+      ctx.beginPath();
+      ctx.arc(m.x,m.y,m.hub?m.r+1.3:m.r,0,Math.PI*2);
+      ctx.fillStyle=m.c;
+      ctx.globalAlpha=m.hub?0.95:0.7;
+      ctx.fill();
+      if(m.hub){
+        ctx.globalAlpha=0.16; ctx.beginPath();
+        ctx.arc(m.x,m.y,m.r+5,0,Math.PI*2); ctx.fillStyle=m.c; ctx.fill();
+      }
+      ctx.globalAlpha=1;
+    }
+    if(!reduce) raf=requestAnimationFrame(step);
+  }
+  function start(){ size(); build(); if(raf) cancelAnimationFrame(raf); step(); }
+  window.addEventListener("resize",function(){ size(); build(); });
+  window.addEventListener("mousemove",function(e){ var r=canvas.getBoundingClientRect(); mx=e.clientX-r.left; my=e.clientY-r.top; });
+  window.addEventListener("mouseleave",function(){ mx=-9999; my=-9999; });
+  start();
+  if(reduce && raf){ cancelAnimationFrame(raf); }
+})();
+
+/* ---------------- INIT ---------------- */
+setLang("lt");
+observeReveal();
+</script>
+</body>
+</html>
